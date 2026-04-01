@@ -236,21 +236,4 @@ Whenever solving problems:
 
 ---
 
-Final Insight
 
-Commands are not important
-Flow is important
-
----
-
-My Growth Today
-
-Before:
-guessing commands
-
-Now:
-building step-by-step pipelines
-
----
-
-This is real Linux understanding
