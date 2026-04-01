@@ -1,0 +1,256 @@
+Linux Practice Challenges (Day — grep, find, awk, pipes)
+
+Purpose
+
+This file contains:
+
+* challenges I attempted
+* mistakes I made
+* correct solutions
+* thinking behind each
+
+Goal:
+When I revisit, I should remember both logic and corrections
+
+---
+
+Challenge 1: Count Total "error" Lines
+
+Task:
+Count how many lines contain "error" in a file
+
+What I did:
+cat data/file1.txt | grep "error"
+
+This only displayed lines, not count
+
+Correct:
+grep "error" data/file1.txt | wc -l
+
+Thinking:
+
+* grep filters lines
+* wc -l counts lines
+
+---
+
+Challenge 2: Count errors in multiple files
+
+Task:
+Count "error" occurrences across multiple .txt files
+
+Mistake:
+ls data/*.txt | grep -c "error"
+
+Problem:
+
+* ls gives filenames, not content
+
+Correct:
+grep -r "error" data/ | wc -l
+
+OR
+
+grep -c "error" data/*.txt
+
+Learning:
+Always distinguish:
+
+* filename vs file content
+
+---
+
+Challenge 3: Search "error" in all files
+
+Task:
+Search inside all files in directory
+
+Mistake:
+grep -r "error".
+
+Problem:
+Missing space before dot
+
+Correct:
+grep -r "error" .
+
+Learning:
+Syntax matters — even small spacing errors break commands
+
+---
+
+Challenge 4: Find files by name
+
+Task:
+Find all .txt files
+
+Mistake:
+find . "*.txt"
+
+Problem:
+Missing -name
+
+Correct:
+find . -name "*.txt"
+
+Learning:
+find always needs a condition (-name, -type, etc.)
+
+---
+
+Challenge 5: Find multiple file types
+
+Task:
+Find .txt and .pdf files
+
+Mistake:
+find . -type f "*.txt" "*.pdf"
+
+Correct:
+find . -type f ( -name "*.txt" -o -name "*.pdf" )
+
+Learning:
+
+* -o means OR
+* ( ) is used for grouping
+
+---
+
+Challenge 6: Search inside found files
+
+Task:
+Find .txt files and search "error" inside them
+
+Initial confusion:
+Did not know how to connect find and grep
+
+Solution (xargs):
+find . -name "*.txt" | xargs grep "error"
+
+Alternative:
+find . -name "*.txt" -exec grep "error" {} ;
+
+Learning:
+
+* find gives files
+* xargs passes them to another command
+* grep processes file content
+
+---
+
+Challenge 7: Extract error type
+
+Task:
+From lines like:
+error timeout
+error disk
+
+Extract:
+timeout
+disk
+
+Solution:
+grep "error" file.txt | awk '{print $2}'
+
+Learning:
+
+* $1 = first word
+* $2 = second word
+
+---
+
+Challenge 8: Count frequency of errors
+
+Task:
+Find how many times each error occurs
+
+Solution:
+grep "error" file.txt | awk '{print $2}' | sort | uniq -c
+
+Learning:
+
+* sort groups similar values
+* uniq -c counts occurrences
+
+---
+
+Challenge 9: Get top errors
+
+Task:
+Show most frequent error
+
+Solution:
+grep "error" file.txt | awk '{print $2}' | sort | uniq -c | sort -nr | head -1
+
+Learning:
+
+* sort -nr sorts numerically in descending order
+* head -1 shows the top result
+
+---
+
+Challenge 10: Search inside PDF
+
+Task:
+Search text inside .pdf file
+
+Mistake:
+cat file.pdf | grep "text"
+
+Output:
+binary file matches
+
+Problem:
+PDF is a binary file, not plain text
+
+Correct:
+pdftotext file.pdf - | grep "text"
+
+Learning:
+Always match the tool with file type
+
+---
+
+Challenge 11: Fix wrong command
+
+Mistake:
+-r "Bharat" /home
+
+Issue:
+Missing command name
+
+Correct:
+grep -r "Bharat" /home
+
+---
+
+Final Pattern I Learned
+
+Whenever solving problems:
+
+1. Find files → find
+2. Search content → grep
+3. Extract data → awk
+4. Count → sort + uniq
+5. Rank → sort -nr + head
+
+---
+
+Final Insight
+
+Commands are not important
+Flow is important
+
+---
+
+My Growth Today
+
+Before:
+guessing commands
+
+Now:
+building step-by-step pipelines
+
+---
+
+This is real Linux understanding
